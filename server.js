@@ -4,6 +4,9 @@ require('dotenv').config({path: './config/env/config.env'});
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+//MongoDb Connection
+const connectDatabase = require('./helpers/database/connectDatabase');
+connectDatabase();
 
 //To get req.body parameters from user
 app.use(express.json());
