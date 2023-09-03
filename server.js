@@ -8,12 +8,8 @@ const PORT = process.env.PORT || 3000;
 //To get req.body parameters from user
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: "Kubis Library Welcome Page"
-  })
-})
+const routers = require('./routers/index');
+app.use('/api', routers);
 
 app.listen(PORT, () => {
   console.log(`App started on ${PORT} : ${process.env.NODE_ENV}`)
