@@ -12,16 +12,15 @@ const getAccessToRoute = (req, res, next) => {
 
 const register = async(req, res, next) => {
 
-    const {name, email, password, role} = req.body;
+    const {name, email, password, role, phonenumber} = req.body;
 
     const user = await User.create({
         name,
         email,
         password,
-        role
+        role,
+        phonenumber
     });
-
-    await user.save();
 
     res.status(200).json({
         success: true,
