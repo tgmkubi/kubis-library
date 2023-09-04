@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const {sendJwtToClient} = require('../helpers/authorization/tokenHelpers');
 
 const getAccessToRoute = (req, res, next) => {
 
@@ -22,10 +23,7 @@ const register = async(req, res, next) => {
         phonenumber
     });
 
-    res.status(200).json({
-        success: true,
-        data: user
-    })
+    sendJwtToClient(user, res);
 }
 
 module.exports = {getAccessToRoute, register};
