@@ -14,6 +14,10 @@ app.use(express.json());
 const routers = require('./routers/index');
 app.use('/api', routers);
 
+// Express Custom Error Handler Middleware
+const customErrorHandler = require('./middlewares/errors/customErrorHandler');
+app.use(customErrorHandler);
+
 app.listen(PORT, () => {
   console.log(`App started on ${PORT} : ${process.env.NODE_ENV}`)
 });
