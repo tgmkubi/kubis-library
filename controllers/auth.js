@@ -13,7 +13,8 @@ const getAccessToRoute = (req, res, next) => {
 
 const register = async(req, res, next) => {
 
-    const {name, email, password, role, phonenumber} = req.body;
+    try {
+        const {name, email, password, role, phonenumber} = req.body;
 
     const user = await User.create({
         name,
@@ -22,8 +23,12 @@ const register = async(req, res, next) => {
         role,
         phonenumber
     });
-
+    
     sendJwtToClient(user, res);
+    
+    } catch (error) {
+        return next(error); // Express wll catch the error with next
+    } 
 }
 
 module.exports = {getAccessToRoute, register};

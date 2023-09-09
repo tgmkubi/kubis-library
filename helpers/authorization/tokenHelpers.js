@@ -10,7 +10,7 @@ const sendJwtToClient = (user, res) => {
     { 
         httpOnly: true,
         secure: NODE_ENV === "development" ? false : true,
-        expires: new Date(Date.now() + parseInt(JWT_COOKIE_EXPIRE) * 1000 * 60)
+        expires: new Date(Date.now() + parseInt(JWT_COOKIE_EXPIRE) * 1000 * 60) // JWT_COOKIE_EXPIRE * Minutes
     })
     .json({
         success: true,
