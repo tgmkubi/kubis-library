@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const getAccessToRoute = (req, res, next) => {
 
     if(!isTokenIncluded(req)) {
-        return next(CustomError("You are not authorizd to access this route", 401));
+        return next(new CustomError("You are not authorizd to access this route", 401));
     };
 
     const access_token = getAccessTokenFromHeader(req); 

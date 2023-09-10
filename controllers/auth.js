@@ -48,4 +48,12 @@ const login = async(req, res, next) => {
     sendJwtToClient(user, res);
 };
 
-module.exports = {register, login};
+const logout = async(req, res, next) => {
+
+    res.status(200).clearCookie('access_token').json({
+        success: true,
+        message: "Logout Successful"
+    });
+};
+
+module.exports = {register, login, logout};
