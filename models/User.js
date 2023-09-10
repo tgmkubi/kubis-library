@@ -1,6 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const CustomError = require("../helpers/error/CustomError");
 
 const UserSchema = new Schema({
   name: {
@@ -67,23 +69,44 @@ const UserSchema = new Schema({
 });
 
 //Methods
-UserSchema.methods.generateJwtFromUser = function() {
-    const {JWT_SECRET_KEY, JWT_EXPIRE} = process.env;
+UserSchema.methods.generateJwtFromUser = function () {
+  const { JWT_SECRET_KEY, JWT_EXPIRE } = process.env;
 
-    const payload = {
-        name: this.name,
-        id: this._id
-    };
+  const payload = {
+    name: this.name,
+    id: this._id,
+  };
 
-    const secretOrPrivateKey = JWT_SECRET_KEY;
-    
-    const options = {
-        expiresIn: JWT_EXPIRE
-    };
+  const secretOrPrivateKey = JWT_SECRET_KEY;
 
-    const token = jwt.sign(payload, secretOrPrivateKey, options);
+  const options = {
+    expiresIn: JWT_EXPIRE,
+  };
 
-    return token;
+  const token = jwt.sign(payload, secretOrPrivateKey, options);
+
+  return token;
 };
+
+// Hooks
+//Password Hash With Bcryptjs (Usage - Async)
+UserSchema.pre("save", function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
+      return next(new CustomError("Bcrypt password error", 404));
+    }
+    bcrypt.hash(this.password, salt, (err, hash) => {
+      if (err) {
+        return next(new CustomError("Bcrypt password error", 404));
+      }
+      // Store hash in your password DB.
+      this.password = hash;
+      next();
+    });
+  });
+});
 
 module.exports = mongoose.model("User", UserSchema);
