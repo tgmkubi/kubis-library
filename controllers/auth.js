@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const {sendJwtToClient} = require('../helpers/authorization/tokenHelpers');
+const {validateUserInput, comparePassword} = require('../helpers/input/inputHelpers');
+const CustomError = require('../helpers/error/CustomError');
+const checkUserExist = require('../helpers/database/checkUserExist');
 
 const register = async(req, res, next) => {
 
@@ -25,13 +28,24 @@ const register = async(req, res, next) => {
 
 const login = async(req, res, next) => {
 
-    const user = req.user;
+    const {email, password} = req.body;
+
+    if(!validateUserInput(email, password)) {
+        return next(new CustomError("Please check your inputs", 400));
+    };
+
+    const user = await User.findOne({email: email}).select("+password");
     
-    res.status(200).json({
-        success: true,
-        message: "Login Functionality",
-        data: user
-    })
+    if(!checkUserExist(user)) {
+        return next(new CustomError("There is no user with that email", 400));
+    };
+
+    const result = await comparePassword(password, user.password);
+    if(!result) {
+        return next(new CustomError("Please check your credentials", 400));
+    }
+
+    sendJwtToClient(user, res);
 };
 
 module.exports = {register, login};
