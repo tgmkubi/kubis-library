@@ -3,14 +3,6 @@ const router = express.Router();
 const User = require('../models/User');
 const {sendJwtToClient} = require('../helpers/authorization/tokenHelpers');
 
-const getAccessToRoute = (req, res, next) => {
-
-    res.json({
-        success: true,
-        message: 'Auth Home Page'
-    });
-};
-
 const register = async(req, res, next) => {
 
     try {
@@ -29,6 +21,17 @@ const register = async(req, res, next) => {
     } catch (error) {
         return next(error); // Express wll catch the error with next
     } 
-}
+};
 
-module.exports = {getAccessToRoute, register};
+const login = async(req, res, next) => {
+
+    const user = req.user;
+    
+    res.status(200).json({
+        success: true,
+        message: "Login Functionality",
+        data: user
+    })
+};
+
+module.exports = {register, login};
