@@ -94,4 +94,23 @@ const imageUpload = asyncErrorWrapper(async (req,res,next) => {
   });
 });
 
-module.exports = { register, login, logout, getLoggedInUser, imageUpload};
+const forgotpassword = asyncErrorWrapper(async (req,res,next) => {
+  const {email} = req.body;
+
+  const user = await User.findOne({email: email});
+
+  if(!checkUserExist(user)) {
+    return next(new CustomError("There is no user with that email", 400));
+  };
+
+  const resetPasswordToken = user.getResetPasswordFromUser();
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    token: resetPasswordToken
+  });
+});
+
+module.exports = { register, login, logout, getLoggedInUser, imageUpload, forgotpassword};

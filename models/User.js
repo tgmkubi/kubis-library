@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const CustomError = require("../helpers/error/CustomError");
+const crypto = require('crypto');
 
 const UserSchema = new Schema({
   name: {
@@ -86,6 +87,22 @@ UserSchema.methods.generateJwtFromUser = function () {
   const token = jwt.sign(payload, secretOrPrivateKey, options);
 
   return token;
+};
+
+UserSchema.methods.getResetPasswordFromUser = function () {
+  const randomHexString = crypto.randomBytes(15).toString("hex");
+  // console.log(randomHexString);
+
+  const resetPasswordToken = crypto
+  .createHash("SHA256")
+  .update(randomHexString)
+  .digest("hex");
+
+  this.resetPasswordToken = resetPasswordToken;
+  const {RESET_PASSWORD_EXPIRE} = process.env;
+  this.resetPasswordExpire = Date.now() + parseInt(RESET_PASSWORD_EXPIRE);
+
+  return resetPasswordToken;
 };
 
 // Hooks
