@@ -79,4 +79,19 @@ const getLoggedInUser = async (req, res, next) => {
   });
 };
 
-module.exports = { register, login, logout, getLoggedInUser };
+const imageUpload = asyncErrorWrapper(async (req,res,next) => {
+  const user = await User.findByIdAndUpdate(req.user.id, {
+    "profile_image": req.savedProfiledImage
+  }, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(200).json({
+    success: true,
+    message: "Image Upload Successful",
+    data: user
+  });
+});
+
+module.exports = { register, login, logout, getLoggedInUser, imageUpload};
