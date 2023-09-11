@@ -18,6 +18,10 @@ app.use('/api', routers);
 const customErrorHandler = require('./middlewares/errors/customErrorHandler');
 app.use(customErrorHandler);
 
+//Express Static Files
+const path = require('path');
+app.use(express.static(path.join(__dirname, "public")));
+
 app.listen(PORT, () => {
   console.log(`App started on ${PORT} : ${process.env.NODE_ENV}`)
 });
