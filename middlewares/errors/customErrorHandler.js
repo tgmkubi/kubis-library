@@ -1,9 +1,9 @@
 const CustomError = require('../../helpers/error/CustomError');
 
 const customErrorHandler = (err, req, res, next) => {
-    //console.log(err.code);
-    //console.log(typeof err.code);
     let customError = err;
+
+    // console.log(err);
 
     if(err.name === "SyntaxError") {
         customError = new CustomError(err.message, 400);
@@ -13,6 +13,9 @@ const customErrorHandler = (err, req, res, next) => {
     };
     if(err.code === 11000) {
         customError = new CustomError("Duplication Key Error", 400);
+    };
+    if(err.name === "CastError") {
+        customError = new CustomError("Please provide a valid id input", 400);
     };
 
     res.status(customError.status || 500).json({

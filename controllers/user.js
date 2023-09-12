@@ -7,8 +7,6 @@ const getSingleUser = asyncErrorWrapper( async(req, res, next) => {
 
     let user = await User.findById(id);
 
-    console.log(user);
-
     if(!user) {
         return next(new CustomError("There is no user with that id", 400));
     };
