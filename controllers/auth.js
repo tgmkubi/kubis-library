@@ -34,6 +34,10 @@ const login = asyncErrorWrapper(async (req, res, next) => {
 
   const user = await User.findOne({ email: email }).select("+password");
 
+  if(user.blocked) {
+    return next(new CustomError("You are not authorized to access. User Blocked.", 401));
+  };
+
   if (!checkUserExist(user)) {
     return next(new CustomError("There is no user with that email", 400));
   }
