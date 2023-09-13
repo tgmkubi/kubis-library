@@ -12,5 +12,7 @@ const auth = require("./auth");
 router.use("/auth", auth);
 const user = require('./user');
 router.use('/user', user);
+const admin = require('./admin');
+router.use('/admin', admin);
 
 module.exports = router;
