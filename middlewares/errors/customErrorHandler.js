@@ -17,6 +17,9 @@ const customErrorHandler = (err, req, res, next) => {
     if(err.name === "CastError") {
         customError = new CustomError("Please provide a valid id input", 400);
     };
+    if(err.name === "TypeError") {
+        customError = new CustomError("Please check your inputs", 400);
+    };
 
     res.status(customError.status || 500).json({
         success: false,
