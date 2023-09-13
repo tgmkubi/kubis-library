@@ -24,4 +24,21 @@ const blockUser = asyncErrorWrapper(async (req, res, next) => {
   });
 });
 
-module.exports = { blockUser };
+const unblockUser = asyncErrorWrapper(async (req, res, next) => {
+    const user = req.user;
+
+  //checkUserBlockStatus databaseErrorHelpers Middleware
+  if(!user.blocked) {
+    return next(new CustomError("User is not blocked", 400));
+  };
+
+  user.blocked = false;
+  await user.save();
+
+  res.status(200).json({
+    status: "success",
+    data: `${user.name} unblock successful`
+  });
+});
+
+module.exports = { blockUser, unblockUser};
