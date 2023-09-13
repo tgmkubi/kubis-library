@@ -41,4 +41,16 @@ const unblockUser = asyncErrorWrapper(async (req, res, next) => {
   });
 });
 
-module.exports = { blockUser, unblockUser};
+const deleteUser = asyncErrorWrapper(async (req, res, next) => {
+    const user = req.user;
+
+    await User.deleteOne({_id: user._id});
+
+    res.status(200).json({
+        status: "success",
+        data: `Delete User Successful`
+      });
+
+});
+
+module.exports = { blockUser, unblockUser, deleteUser};
