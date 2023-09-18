@@ -14,5 +14,6 @@ const user = require('./user');
 router.use('/user', user);
 const admin = require('./admin');
 router.use('/admin', admin);
-
+const book = require('./book');
+router.use('/book', book);
 module.exports = router;
